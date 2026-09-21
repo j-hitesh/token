@@ -33,7 +33,8 @@
         /* Dedicated Print Stylesheet */
         @media print {
             @page {
-                margin: 0.25in;
+                size: A4 portrait;
+                margin: 0;
             }
 
             body {
@@ -46,10 +47,25 @@
                 display: none !important;
             }
 
+            .a4-sheet-container {
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+
+            .a4-sheet {
+                box-shadow: none !important;
+                margin: 0 auto !important;
+                padding: 24px 20px !important;
+                width: 100% !important;
+                min-height: auto !important;
+            }
+
             .print-area {
                 padding: 0 !important;
                 margin: 0 !important;
                 width: 100% !important;
+                gap: 12px !important;
             }
 
             .delhivery-table-label {
@@ -59,33 +75,78 @@
             }
         }
 
-        /* 100% Exact Grid Table Layout from Image */
+        /* 100% Exact Grid Table Layout matching reference PDF */
         .delhivery-table-label {
-            width: 460px;
-            /* Match the reference label proportions */
+            width: 350px !important;
+            min-width: 350px !important;
+            max-width: 350px !important;
+            height: 433px !important;
+            flex-shrink: 0 !important;
             background-color: #ffffff;
             border: var(--label-border-width) solid var(--label-border-color);
             border-collapse: collapse;
             border-spacing: 0;
+            table-layout: fixed;
             color: #000000;
             font-family: var(--label-font);
             font-size: 11px;
             line-height: 1.2;
-            margin: 0 auto;
+            margin: 0 -122px 0 0;
             box-sizing: border-box;
+            transform: scale(0.65);
+            transform-origin: top left;
+        }
+
+        .a4-sheet-container {
+            width: 100%;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .a4-sheet {
+            width: 794px !important;
+            min-width: 794px !important;
+            max-width: 794px !important;
+            height: 1123px !important;
+            max-height: 1123px !important;
+            background: #ffffff !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 24px 20px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            flex-shrink: 0 !important;
+        }
+
+        .label-row-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+            width: 468px !important;
+            min-width: 468px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
         }
 
         .print-area {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 24px;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
         }
 
         @media (max-width: 820px) {
             .delhivery-table-label {
-                width: min(460px, 100%);
+                width: 350px !important;
+                min-width: 350px !important;
             }
         }
 
@@ -96,23 +157,29 @@
             vertical-align: middle;
         }
 
-        .label-hub-row {
-            height: 52px;
+        .label-address-table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            border: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .label-address-row {
-            height: 100px;
+        .label-address-table td {
+            border: none !important;
         }
 
-        .label-return-row {
-            height: 78px;
+        .label-address-table td.label-address-left {
+            border-right: 1px solid #000000 !important;
         }
+
 
         /* SVG Barcode size constraint */
         .barcode-1d-container svg {
-            width: 300px !important;
-            max-width: 300px;
-            height: 48px !important;
+            width: 244px !important;
+            max-width: 100%;
+            height: auto !important;
             display: block;
             margin: 0 auto;
         }
@@ -120,8 +187,8 @@
         .datamatrix-container canvas {
             display: block;
             margin: 0 auto;
-            width: 68px !important;
-            height: 68px !important;
+            width: 64px !important;
+            height: 64px !important;
             image-rendering: pixelated;
         }
 
@@ -327,7 +394,7 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Shipping Address Details</label>
                         <textarea id="shipToAddress" rows="3" readonly
-                            class="w-full text-xs p-2 border border-slate-300 rounded-lg">su-kam power systems itd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:</textarea>
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg">su-kam power systems ltd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:</textarea>
                     </div>
 
                     <div>
@@ -359,13 +426,13 @@
                             5. Boxes & Sequence
                         </h3>
                         <span id="boxCountBadge"
-                            class="bg-red-100 text-red-800 text-xs px-2.5 py-0.5 rounded-full font-bold">1 Box</span>
+                            class="bg-red-100 text-red-800 text-xs px-2.5 py-0.5 rounded-full font-bold">2 Boxes</span>
                     </div>
 
                     <label
                         class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200 cursor-pointer">
                         <span class="text-xs font-bold text-slate-700">Add another box</span>
-                        <input type="checkbox" id="addAnotherBox" onchange="toggleAdditionalBox(this.checked)"
+                        <input type="checkbox" id="addAnotherBox" checked onchange="toggleAdditionalBox(this.checked)"
                             class="h-4 w-4 accent-red-600">
                     </label>
 
@@ -374,7 +441,7 @@
                         <div class="flex items-center gap-1">
                             <button onclick="changeBoxCount(-1)"
                                 class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-black text-slate-700 text-sm">-</button>
-                            <input type="number" id="totalBoxes" value="1" min="1" max="20" onchange="updateBoxList()"
+                            <input type="number" id="totalBoxes" value="2" min="1" max="20" onchange="updateBoxList()"
                                 class="w-12 text-center text-xs p-1.5 border border-slate-300 rounded-lg font-bold">
                             <button onclick="changeBoxCount(1)"
                                 class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-black text-slate-700 text-sm">+</button>
@@ -390,7 +457,7 @@
 
             <!-- Right Live Document Preview Screen -->
             <div
-                class="lg:col-span-7 bg-slate-200/80 p-4 sm:p-6 rounded-2xl border border-slate-300 flex flex-col items-center min-h-[600px]">
+                class="lg:col-span-7 bg-slate-200/80 p-4 sm:p-6 rounded-2xl border border-slate-300 flex flex-col items-center min-h-[600px] overflow-hidden">
 
                 <div class="w-full flex items-center justify-between mb-4 no-print">
                     <div class="flex items-center gap-2">
@@ -406,9 +473,13 @@
                     </div>
                 </div>
 
-                <!-- Printable Label Sheet Area -->
-                <div id="printableArea" class="print-area w-full">
-                    <!-- Dynamic Grid Tables injected here -->
+                <!-- Printable Label Sheet Area (A4 Sheet Container) -->
+                <div class="a4-sheet-container w-full">
+                    <div id="printableArea" class="a4-sheet">
+                        <div id="labelGrid" class="label-row-grid">
+                            <!-- Dynamic Grid Tables injected here -->
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -426,13 +497,14 @@
     <script>
         const fixedLabelData = {
             shipToName: "NATIONALSPEEDCOURIERP B2BR",
-            shipToAddress: "su-kam power systems itd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:",
+            shipToAddress: "su-kam power systems ltd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:",
             returnNote: "defecti item",
             returnAddress: "NATIONALSPEEDCOURIERP B2BR,VISHNU JANGID NEAR AXIS BANK FCI GODAM ROAD GANGAPUR CITY MOB NO 322201,Karauli,Rajasthan,322201"
         };
 
         let boxData = [
-            { boxIndex: 1, type: 'Master', awb: '22203510050024' }
+            { boxIndex: 1, type: 'Master', awb: '22203510050024' },
+            { boxIndex: 2, type: 'Child', awb: '22203510050035' }
         ];
 
         const sampleImageMatchData = {
@@ -446,7 +518,7 @@
             hubName: "Gurgaon_Sector17_L",
             hubState: "(Haryana)",
             shipToName: "NATIONALSPEEDCOURIERP B2BR",
-            shipToAddress: "su-kam power systems itd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:",
+            shipToAddress: "su-kam power systems ltd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:",
             returnNote: "defecti item",
             returnAddress: "NATIONALSPEEDCOURIERP B2BR,VISHNU JANGID NEAR AXIS BANK FCI GODAM ROAD GANGAPUR CITY MOB NO 322201,Karauli,Rajasthan,322201",
             boxes: [
@@ -542,9 +614,12 @@
             }
         }
 
+        const DELHIVERY_LOGO_DATA_URI = "data:image/jpeg;base64,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";
+
         function renderLabels() {
-            const printableArea = document.getElementById('printableArea');
-            printableArea.innerHTML = '';
+            const labelGrid = document.getElementById('labelGrid');
+            if (!labelGrid) return;
+            labelGrid.innerHTML = '';
 
             // Retrieve current values
             const courierName = 'DELHIVERY';
@@ -557,6 +632,9 @@
             const hubName = document.getElementById('hubName').value.trim();
             const hubState = document.getElementById('hubState').value.trim();
             const { shipToName, shipToAddress, returnNote, returnAddress } = fixedLabelData;
+            const formattedShipToName = shipToName.includes(' ')
+                ? `${shipToName.substring(0, shipToName.lastIndexOf(' '))}<br>${shipToName.substring(shipToName.lastIndexOf(' ') + 1)}`
+                : shipToName;
 
             boxData.forEach((box, idx) => {
                 const labelTable = document.createElement('table');
@@ -567,89 +645,103 @@
 
                 labelTable.innerHTML = `
                     <tbody>
-                        <!-- Row 1: Top Section (Left: Logo + Data Matrix | Right: 5 Stacked Sub-rows) -->
-                        <tr>
-                            <td rowspan="5" style="width: 50%; text-align: center; vertical-align: top; padding: 6px 0; border: 1px solid #000000; border-bottom: 1px solid #000000;" class="bg-white">
-                              <img src="idYw5wJQH6_1789989389273.svg" alt="DELHIVERY Logo" style="width: 60%; height: auto; padding-left: 6px; ">
-                                <div style="font-weight: 700; text-align: left; font-size: 11px; color: #dc2626; margin-top: 2px; margin-bottom: 6px; font-family: Arial, sans-serif; padding-left: 6px;">
-                                    ${serviceType}
-                                </div>
-                                <div class="datamatrix-container flex justify-center items-center py-1 border-t border-black">
-                                    <canvas id="${qr2dCanvasId}"></canvas>
-                                </div>
+                        <!-- Row 1: Logo & Date -->
+                        <tr style="height: 16px;">
+                            <td rowspan="2" style="width: 50%; vertical-align: middle; text-align: center; padding: 4px 6px; border: 1px solid #000000;" class="bg-white">
+                                <img src="${DELHIVERY_LOGO_DATA_URI}" alt="DELHIVERY Small World" style="width: 100px; height: auto; max-height: 34px; display: block; margin: 0 auto; object-fit: contain;">
                             </td>
-                            <td style="width: 50%; font-weight: 700; font-size: 12px; font-family: Arial, sans-serif;">
-                                Date: <span style="font-weight: 800;">${shipDate}</span>
+                            <td style="width: 50%; font-size: 11px; font-family: Arial, sans-serif; padding: 3px 6px; line-height: 1.3; border: 1px solid #000000;">
+                                Date: <span style="font-weight: 700;">${shipDate}</span>
                             </td>
                         </tr>
-                        <tr>
-                            <td style="font-weight: 700; font-size: 12px; font-family: Arial, sans-serif;">
-                                LRN: <span style="font-weight: 800; font-family: Arial, sans-serif;">${lrnNumber}</span>
+
+                        <!-- Row 2: LRN -->
+                        <tr style="height: 30px;">
+                            <td style="width: 50%; font-size: 11px; font-family: Arial, sans-serif; padding: 3px 6px; line-height: 1.3; border: 1px solid #000000;">
+                                LRN: <span style="font-weight: 700;">${lrnNumber}</span>
                             </td>
                         </tr>
-                        <tr>
-                            <td style="font-weight: 700; font-size: 12px; font-family: Arial, sans-serif;">
-                                OID: <span style="font-weight: 800; font-family: Arial, sans-serif;">${oidNumber}</span>
+
+                        <!-- Row 3: 2D Barcode & OID -->
+                        <tr style="height: 25px;">
+                            <td rowspan="3" style="width: 50%; vertical-align: middle; text-align: center; padding: 6px 4px; border: 1px solid #000000;" class="bg-white">
+                                <canvas id="${qr2dCanvasId}" style="display: block; margin: 0 auto; width: 90px; height: 90px; image-rendering: pixelated;"></canvas>
+                            </td>
+                            <td style="width: 50%; font-size: 11px; font-family: Arial, sans-serif; padding: 3px 6px; line-height: 1.3; border: 1px solid #000000;">
+                                OID: <span style="font-weight: 700;">${oidNumber}</span>
                             </td>
                         </tr>
-                        <tr>
-                            <td style="vertical-align: top; padding: 4px 6px; font-family: Arial, sans-serif;">
-                                <div style="font-weight: 700; font-size: 11px;">Master:</div>
-                                <div style="font-weight: 800; font-size: 13px; font-family: Arial, sans-serif; margin-top: 1px;">${masterAwb}</div>
+
+                        <!-- Row 4: Master -->
+                        <tr style="height: 41px;">
+                            <td style="width: 50%; font-size: 11px; font-family: Arial, sans-serif; padding: 3px 6px; line-height: 1.25; vertical-align: top; border: 1px solid #000000;">
+                                <div style="font-weight: 400; font-size: 10.5px;">Master:</div>
+                                <div style="font-weight: 700; font-size: 11.5px; font-family: Arial, sans-serif; margin-top: 1px;">${masterAwb}</div>
                             </td>
                         </tr>
-                        <tr>
-                            <td style="font-weight: 800; font-size: 14px; letter-spacing: 0.2px; font-family: Arial, sans-serif;">
+
+                        <!-- Row 5: Route Code -->
+                        <tr style="height: 36px;">
+                            <td style="width: 50%; font-size: 12px; font-weight: 700; font-family: Arial, sans-serif; padding: 3px 6px; line-height: 1.3; border: 1px solid #000000;">
                                 ${routeCode}
                             </td>
                         </tr>
 
-                        <!-- Row 2: Full Width 1D Barcode -->
-                        <tr>
-                            <td colspan="2" style="text-align: center; padding: 8px 4px 4px 4px;" class="barcode-1d-container">
-                                <svg id="${barcode1dSvgId}"></svg>
+                        <!-- Row 6: 1D Code128 Barcode with Number Below -->
+                        <tr style="height: 63px;">
+                            <td colspan="2" style="text-align: center; padding: 4px; border: 1px solid #000000;" class="barcode-1d-container">
+                                <svg id="${barcode1dSvgId}" style="display: block; margin: 0 auto; width: 244px; height: 52px;"></svg>
+                                <div style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 700; text-align: center; letter-spacing: 0.5px; margin-top: 2px; color: #000000; line-height: 1;">
+                                    ${box.awb || masterAwb}
+                                </div>
                             </td>
                         </tr>
 
-                        <!-- Row 3: Box Count & Master/Child Type -->
-                        <tr>
-                            <td style="width: 50%; text-align: center; font-weight: 800; font-size: 13px; padding: 6px; font-family: Arial, sans-serif;">
+                        <!-- Row 7: Box Count & Master/Child -->
+                        <tr style="height: 40px;">
+                            <td style="width: 50%; text-align: center; font-weight: 700; font-size: 12px; padding: 4px 5px; font-family: Arial, sans-serif; border: 1px solid #000000;">
                                 Box : ${box.boxIndex}/${boxData.length}
                             </td>
-                            <td style="width: 50%; text-align: center; font-weight: 700; font-size: 12px; padding: 6px; font-family: Arial, sans-serif;">
+                            <td style="width: 50%; text-align: center; font-weight: 400; font-size: 11.5px; padding: 4px 5px; font-family: Arial, sans-serif; border: 1px solid #000000;">
                                 ${box.type}
                             </td>
                         </tr>
 
-                        <!-- Row 4: Hub Location & Receiver Business Name -->
-                        <tr class="label-hub-row">
-                            <td style="width: 50%; vertical-align: middle; padding: 6px 6px; font-family: Arial, sans-serif;">
-                                <div style="font-weight: 300; font-size: 11px; line-height: 1.2;">${hubName}</div>
-                                <div style="font-weight: 300; font-size: 11px; line-height: 1.2;">${hubState}</div>
+                        <!-- Row 8: Hub Location & Consignee -->
+                        <tr style="height: 46px;">
+                            <td style="width: 50%; vertical-align: middle; padding: 4px 6px; font-family: Arial, sans-serif; line-height: 1.2; border: 1px solid #000000;">
+                                <div style="font-weight: 400; font-size: 10.5px; line-height: 1.2;">${hubName}</div>
+                                <div style="font-weight: 400; font-size: 10.5px; line-height: 1.2;">${hubState}</div>
                             </td>
-                            <td style="width: 50%; text-align: center; vertical-align: middle; font-weight: 800; font-size: 12px; text-transform: uppercase; padding: 6px 4px; font-family: Arial, sans-serif;">
-                                ${shipToName}
-                            </td>
-                        </tr>
-
-                        <!-- Row 5: Shipping Address & Remark Note -->
-                        <tr class="label-address-row">
-                            <td style="width: 70%; vertical-align: top; padding: 6px; font-family: Arial, sans-serif;">
-                                <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px;">Shipping address :</div>
-                                <div style="font-weight: 300; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
-                                    ${shipToAddress}
-                                </div>
-                            </td>
-                            <td style="width: 30%; text-align: center; vertical-align: middle; font-weight: 300; font-size: 11px; padding: 6px; font-family: Arial, sans-serif;">
-                                ${returnNote}
+                            <td style="width: 50%; text-align: center; vertical-align: middle; font-weight: 700; font-size: 11.5px; text-transform: uppercase; padding: 4px 5px; font-family: Arial, sans-serif; line-height: 1.2; border: 1px solid #000000;">
+                                ${formattedShipToName}
                             </td>
                         </tr>
 
-                        <!-- Row 6: Return Address (Full Width) -->
-                        <tr class="label-return-row">
-                            <td colspan="2" style="vertical-align: top; padding: 6px 6px 8px 6px; font-family: Arial, sans-serif;">
-                                <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px;">Return address :</div>
-                                <div style="font-weight: 300; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
+                        <!-- Row 9: Shipping Address & Remark Note -->
+                        <tr style="height: 76px;">
+                            <td colspan="2" style="padding: 0; margin: 0; border: 1px solid #000000; vertical-align: top;">
+                                <table class="label-address-table">
+                                    <tr>
+                                        <td class="label-address-left" style="width: 71%; vertical-align: top; padding: 4px 6px; font-family: Arial, sans-serif;">
+                                            <div style="font-weight: 700; font-size: 9.5px; margin-bottom: 2px;">Shipping address :</div>
+                                            <div style="font-weight: 400; font-size: 8px; line-height: 1.25; word-break: break-word;">
+                                                ${shipToAddress}
+                                            </div>
+                                        </td>
+                                        <td style="width: 29%; text-align: center; vertical-align: middle; font-weight: 400; font-size: 9.5px; padding: 4px; font-family: Arial, sans-serif;">
+                                            ${returnNote}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- Row 10: Return Address -->
+                        <tr style="height: 60px;">
+                            <td colspan="2" style="vertical-align: top; padding: 4px 6px 5px 6px; font-family: Arial, sans-serif; border: 1px solid #000000;">
+                                <div style="font-weight: 700; font-size: 9.5px; margin-bottom: 2px;">Return address :</div>
+                                <div style="font-weight: 400; font-size: 8px; line-height: 1.25; word-break: break-word;">
                                     ${returnAddress}
                                 </div>
                             </td>
@@ -657,7 +749,7 @@
                     </tbody>
                 `;
 
-                printableArea.appendChild(labelTable);
+                labelGrid.appendChild(labelTable);
 
                 // Render 2D DataMatrix (Exact Delhivery DataMatrix 2D Barcode)
                 setTimeout(() => {
@@ -676,12 +768,12 @@
                     }
                 }, 10);
 
-                // Render 1D Code128 Barcode
+                // Render 1D Code128 Barcode lines
                 try {
                     JsBarcode(`#${barcode1dSvgId}`, box.awb || masterAwb || "0000000000000", {
-                        format: "CODE128",
-                        width: 1.5,
-                        height: 48,
+                        format: "CODE128B",
+                        width: 1.28,
+                        height: 52,
                         displayValue: false,
                         margin: 0
                     });
@@ -743,20 +835,32 @@
 
         function downloadPDF() {
             showToast("Generating crisp 100% PDF...");
+            const container = document.querySelector('.a4-sheet-container');
+            const prevScrollLeft = container ? container.scrollLeft : 0;
+            if (container) container.scrollLeft = 0;
+
             const element = document.getElementById('printableArea');
             const lrn = document.getElementById('lrnNumber').value || 'shipment';
 
             const opt = {
-                margin: [0.2, 0.2, 0.2, 0.2],
+                margin: 0,
                 filename: `Delhivery_Label_${lrn}.pdf`,
                 image: { type: 'jpeg', quality: 1.0 },
-                html2canvas: { scale: 4, useCORS: true, logging: false },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    scrollY: 0,
+                    scrollX: 0
+                },
+                jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
+                if (container) container.scrollLeft = prevScrollLeft;
                 showToast("100% Exact PDF downloaded successfully!");
             }).catch(err => {
+                if (container) container.scrollLeft = prevScrollLeft;
                 console.error("PDF generation error:", err);
                 showToast("Error generating PDF");
             });
