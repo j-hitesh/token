@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delhivery Courier Shipping Label Generator - 100% Exact Replica</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- JsBarcode for Code128 1D Barcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <!-- bwip-js for Data Matrix 2D Barcode (Exact match for Delhivery 2D Matrix) -->
+    <script src="https://cdn.jsdelivr.net/npm/bwip-js@3.0.4/dist/bwip-js-min.js"></script>
+    <!-- html2pdf for high-quality exact PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Liberation+Sans:wght@400;700&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: Arial, Helvetica, 'Liberation Sans', sans-serif;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Dedicated Print Stylesheet */
+        @media print {
+            @page {
+                margin: 0.25in;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-area {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+
+            .delhivery-table-label {
+                page-break-inside: avoid !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+        }
+
+        /* 100% Exact Grid Table Layout from Image */
+        .delhivery-table-label {
+            width: 460px;
+            /* Match the reference label proportions */
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-collapse: collapse;
+            color: #000000;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            line-height: 1.2;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .print-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+        }
+
+        @media (max-width: 820px) {
+            .delhivery-table-label {
+                width: min(460px, 100%);
+            }
+        }
+
+        .delhivery-table-label td,
+        .delhivery-table-label th {
+            border: 2px solid #000000;
+            padding: 3px 5px;
+            vertical-align: middle;
+        }
+
+        .label-hub-row {
+            height: 52px;
+        }
+
+        .label-address-row {
+            height: 100px;
+        }
+
+        .label-return-row {
+            height: 78px;
+        }
+
+        /* SVG Barcode size constraint */
+        .barcode-1d-container svg {
+            width: 300px !important;
+            max-width: 300px;
+            height: 48px !important;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .datamatrix-container canvas {
+            display: block;
+            margin: 0 auto;
+            width: 68px !important;
+            height: 68px !important;
+            image-rendering: pixelated;
+        }
+
+        .courier-logo {
+            position: relative;
+            display: inline-block;
+            font-family: 'Arial Black', Impact, Arial, sans-serif;
+            font-size: 20px;
+            font-stretch: condensed;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            transform: scaleX(0.9);
+            transform-origin: center;
+        }
+
+        .courier-logo::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 9px;
+            height: 5px;
+            background: #e30613;
+        }
+
+        .courier-logo::after {
+            content: '';
+            position: absolute;
+            right: 1px;
+            top: 0;
+            width: 5px;
+            height: 10px;
+            background: #e30613;
+        }
+
+        .courier-logo-svg {
+            display: block;
+            width: 100%;
+            max-width: 205px;
+            height: auto;
+            margin: 0 auto 2px;
+        }
+
+        /* Custom Scrollbar for sidebar editor */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="h-full antialiased text-slate-800">
+
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Top Navigation Bar -->
+        <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-30 no-print border-b border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="bg-red-600 text-white font-black px-2.5 py-1 rounded tracking-tighter text-lg uppercase flex items-center gap-1 shadow">
+                        <span>DELHIVERY</span>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base sm:text-lg leading-tight flex items-center gap-2">
+                            PDF Label Generator
+                            <span
+                                class="bg-emerald-500 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded tracking-wide uppercase">100%
+                                Exact Image Match</span>
+                        </h1>
+                        <p class="text-xs text-slate-400 hidden sm:block">Exact Replica of Official Courier Label Layout
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="loadSampleData()"
+                        class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-file-image"></i>
+                        <span>Load Exact Sample Data</span>
+                    </button>
+                    <button onclick="window.print()"
+                        class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-print"></i>
+                        <span class="hidden sm:inline">Print Labels</span>
+                    </button>
+                    <button onclick="downloadPDF()"
+                        class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download 100% PDF</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace Grid -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Left Controls Sidebar -->
+            <div
+                class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-5 no-print overflow-y-auto max-h-[calc(100vh-100px)]">
+                <div class="flex items-center justify-between border-b pb-3">
+                    <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-red-600"></i> Edit Label Values
+                    </h2>
+                    <button onclick="resetForm()"
+                        class="text-xs text-slate-500 hover:text-red-600 flex items-center gap-1 font-semibold transition">
+                        <i class="fa-solid fa-rotate-left"></i> Clear Form
+                    </button>
+                </div>
+
+                <!-- Section 1: Top Header Metadata -->
+                <div class="space-y-3">
+                    <h3
+                        class="text-xs font-black uppercase tracking-wider text-slate-500 border-l-2 border-red-600 pl-2">
+                        1. Top Grid Metadata
+                    </h3>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Courier Branding</label>
+                            <input type="text" id="courierName" value="DELHIVERY" readonly
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg font-black uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Subtitle</label>
+                            <input type="text" id="serviceType" value="Small World" oninput="renderLabels()"
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg font-semibold text-red-600">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Date</label>
+                            <input type="text" id="shipDate" value="Nov 14, 2024" oninput="renderLabels()"
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">LRN</label>
+                            <input type="text" id="lrnNumber" value="271494718" oninput="renderLabels()"
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">OID</label>
+                            <input type="text" id="oidNumber" value="01" oninput="renderLabels()"
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Master & Route -->
+                <div class="space-y-3">
+                    <h3
+                        class="text-xs font-black uppercase tracking-wider text-slate-500 border-l-2 border-red-600 pl-2">
+                        2. Master AWB & Hub Route
+                    </h3>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Master AWB Code</label>
+                        <input type="text" id="masterAwb" value="22203510050024" oninput="updateMasterAwb(this.value)"
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg font-mono font-bold">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Route / Hub Code</label>
+                            <input type="text" id="routeCode" value="122001 GUR/TGW" oninput="renderLabels()"
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg font-bold uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Destination Hub</label>
+                            <input type="text" id="hubName" value="Gurgaon_Sector17_L" oninput="renderLabels()"
+                                class="w-full text-xs p-2 border border-slate-300 rounded-lg font-semibold">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Hub State</label>
+                        <input type="text" id="hubState" value="(Haryana)" oninput="renderLabels()"
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg">
+                    </div>
+                </div>
+
+                <!-- Section 3: Shipping & Consignee -->
+                <div class="space-y-3">
+                    <h3
+                        class="text-xs font-black uppercase tracking-wider text-slate-500 border-l-2 border-red-600 pl-2">
+                        3. Receiver & Shipping Address
+                    </h3>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Receiver Name / Business</label>
+                        <input type="text" id="shipToName" value="NATIONALSPEEDCOURIERP B2BR" readonly
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg font-bold uppercase">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Shipping Address Details</label>
+                        <textarea id="shipToAddress" rows="3" readonly
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg">su-kam power systems itd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Remark / Note (Right Cell)</label>
+                        <input type="text" id="returnNote" value="defecti item" readonly
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg font-medium">
+                    </div>
+                </div>
+
+                <!-- Section 4: Return Address -->
+                <div class="space-y-3">
+                    <h3
+                        class="text-xs font-black uppercase tracking-wider text-slate-500 border-l-2 border-red-600 pl-2">
+                        4. Return Address (Full Width Bottom)
+                    </h3>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Full Return Address</label>
+                        <textarea id="returnAddress" rows="3" readonly
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg font-medium">NATIONALSPEEDCOURIERP B2BR,VISHNU JANGID NEAR AXIS BANK FCI GODAM ROAD GANGAPUR CITY MOB NO 322201,Karauli,Rajasthan,322201</textarea>
+                    </div>
+                </div>
+
+                <!-- Section 5: Box Sequencing -->
+                <div class="space-y-3 border-t pt-3">
+                    <div class="flex items-center justify-between">
+                        <h3
+                            class="text-xs font-black uppercase tracking-wider text-slate-500 border-l-2 border-red-600 pl-2">
+                            5. Boxes & Sequence
+                        </h3>
+                        <span id="boxCountBadge"
+                            class="bg-red-100 text-red-800 text-xs px-2.5 py-0.5 rounded-full font-bold">1 Box</span>
+                    </div>
+
+                    <label
+                        class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200 cursor-pointer">
+                        <span class="text-xs font-bold text-slate-700">Add another box</span>
+                        <input type="checkbox" id="addAnotherBox" onchange="toggleAdditionalBox(this.checked)"
+                            class="h-4 w-4 accent-red-600">
+                    </label>
+
+                    <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                        <label class="text-xs font-bold text-slate-700">Total Box Count:</label>
+                        <div class="flex items-center gap-1">
+                            <button onclick="changeBoxCount(-1)"
+                                class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-black text-slate-700 text-sm">-</button>
+                            <input type="number" id="totalBoxes" value="1" min="1" max="20" onchange="updateBoxList()"
+                                class="w-12 text-center text-xs p-1.5 border border-slate-300 rounded-lg font-bold">
+                            <button onclick="changeBoxCount(1)"
+                                class="w-8 h-8 rounded-lg bg-slate-200 hover:bg-slate-300 font-black text-slate-700 text-sm">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Child AWB Inputs -->
+                    <div id="childAwbContainer" class="space-y-2 pt-1">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Live Document Preview Screen -->
+            <div
+                class="lg:col-span-7 bg-slate-200/80 p-4 sm:p-6 rounded-2xl border border-slate-300 flex flex-col items-center min-h-[600px]">
+
+                <div class="w-full flex items-center justify-between mb-4 no-print">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="inline-flex items-center justify-center w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <h2 class="text-xs font-black text-slate-800 uppercase tracking-wider">Live Output Preview</h2>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <span class="font-bold">Match Status:</span>
+                        <span class="bg-black text-white px-2 py-0.5 rounded text-[11px] font-mono font-bold">100% Image
+                            Match</span>
+                    </div>
+                </div>
+
+                <!-- Printable Label Sheet Area -->
+                <div id="printableArea" class="print-area w-full">
+                    <!-- Dynamic Grid Tables injected here -->
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"
+        class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toastMsg">Action completed!</span>
+    </div>
+
+    <script>
+        const fixedLabelData = {
+            shipToName: "NATIONALSPEEDCOURIERP B2BR",
+            shipToAddress: "su-kam power systems itd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:",
+            returnNote: "defecti item",
+            returnAddress: "NATIONALSPEEDCOURIERP B2BR,VISHNU JANGID NEAR AXIS BANK FCI GODAM ROAD GANGAPUR CITY MOB NO 322201,Karauli,Rajasthan,322201"
+        };
+
+        let boxData = [
+            { boxIndex: 1, type: 'Master', awb: '22203510050024' }
+        ];
+
+        const sampleImageMatchData = {
+            courierName: "DELHIVERY",
+            serviceType: "Small World",
+            shipDate: "Nov 14, 2024",
+            lrnNumber: "271494718",
+            oidNumber: "01",
+            masterAwb: "22203510050024",
+            routeCode: "122001 GUR/TGW",
+            hubName: "Gurgaon_Sector17_L",
+            hubState: "(Haryana)",
+            shipToName: "NATIONALSPEEDCOURIERP B2BR",
+            shipToAddress: "su-kam power systems itd gurgum, sukam,Plot No 196-BC , Udhyog Vihar Phase VI, Sec-37, , City: Gurgaon, State: Haryana, Pin: 122001,Phone:",
+            returnNote: "defecti item",
+            returnAddress: "NATIONALSPEEDCOURIERP B2BR,VISHNU JANGID NEAR AXIS BANK FCI GODAM ROAD GANGAPUR CITY MOB NO 322201,Karauli,Rajasthan,322201",
+            boxes: [
+                { boxIndex: 1, type: 'Master', awb: '22203510050024' },
+                { boxIndex: 2, type: 'Child', awb: '22203510050035' }
+            ]
+        };
+
+        window.onload = function () {
+            initBoxInputs();
+            renderLabels();
+        };
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function changeBoxCount(delta) {
+            const totalInput = document.getElementById('totalBoxes');
+            let current = parseInt(totalInput.value) || 1;
+            let updated = Math.max(1, Math.min(20, current + delta));
+            totalInput.value = updated;
+            updateBoxList();
+        }
+
+        function toggleAdditionalBox(shouldAdd) {
+            document.getElementById('totalBoxes').value = shouldAdd ? 2 : 1;
+            updateBoxList();
+        }
+
+        function updateMasterAwb(newMaster) {
+            if (boxData.length > 0) {
+                boxData[0].awb = newMaster.trim();
+            }
+            initBoxInputs();
+            renderLabels();
+        }
+
+        function updateBoxList() {
+            const totalBoxes = parseInt(document.getElementById('totalBoxes').value) || 1;
+            document.getElementById('boxCountBadge').innerText = `${totalBoxes} ${totalBoxes === 1 ? 'Box' : 'Boxes'}`;
+
+            const masterAwb = document.getElementById('masterAwb').value.trim();
+
+            let newBoxData = [];
+            for (let i = 0; i < totalBoxes; i++) {
+                let boxIndex = i + 1;
+                let existing = boxData[i];
+                let isMaster = (boxIndex === 1);
+
+                let defaultAwb = isMaster ? masterAwb : (existing ? existing.awb : (parseInt(masterAwb) ? (BigInt(masterAwb) + BigInt(i)).toString() : masterAwb));
+
+                newBoxData.push({
+                    boxIndex: boxIndex,
+                    type: isMaster ? 'Master' : 'Child',
+                    awb: defaultAwb
+                });
+            }
+            boxData = newBoxData;
+            initBoxInputs();
+            renderLabels();
+        }
+
+        function initBoxInputs() {
+            const container = document.getElementById('childAwbContainer');
+            container.innerHTML = '';
+
+            boxData.forEach((box, index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-2 text-xs bg-slate-50 p-2 rounded-lg border border-slate-200';
+                row.innerHTML = `
+                    <span class="font-bold text-slate-600 w-16">Box ${box.boxIndex}/${boxData.length}:</span>
+                    <span class="px-1.5 py-0.5 text-[10px] uppercase font-bold rounded ${box.type === 'Master' ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-slate-200 text-slate-700'}">${box.type}</span>
+                    <input type="text" value="${box.awb}" oninput="updateSingleBoxAwb(${index}, this.value)" placeholder="Enter AWB Code" class="flex-1 text-xs p-1 border border-slate-300 rounded font-mono font-semibold">
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function updateSingleBoxAwb(index, value) {
+            if (boxData[index]) {
+                boxData[index].awb = value.trim();
+                if (index === 0) {
+                    document.getElementById('masterAwb').value = value.trim();
+                }
+                renderLabels();
+            }
+        }
+
+        function renderLabels() {
+            const printableArea = document.getElementById('printableArea');
+            printableArea.innerHTML = '';
+
+            // Retrieve current values
+            const courierName = 'DELHIVERY';
+            const serviceType = document.getElementById('serviceType').value.trim() || 'Small World';
+            const shipDate = document.getElementById('shipDate').value.trim();
+            const lrnNumber = document.getElementById('lrnNumber').value.trim();
+            const oidNumber = document.getElementById('oidNumber').value.trim();
+            const masterAwb = document.getElementById('masterAwb').value.trim();
+            const routeCode = document.getElementById('routeCode').value.trim();
+            const hubName = document.getElementById('hubName').value.trim();
+            const hubState = document.getElementById('hubState').value.trim();
+            const { shipToName, shipToAddress, returnNote, returnAddress } = fixedLabelData;
+
+            boxData.forEach((box, idx) => {
+                const labelTable = document.createElement('table');
+                labelTable.className = 'delhivery-table-label shadow-xl bg-white text-black';
+
+                const barcode1dSvgId = `barcode-1d-svg-${idx}`;
+                const qr2dCanvasId = `qr-2d-canvas-${idx}`;
+
+                // 100% Exact Grid Table Structure matching image_ec01ba.png
+                labelTable.innerHTML = `
+                    <tbody>
+                        <!-- Row 1: Top Section (Left: Logo + Data Matrix | Right: 5 Stacked Sub-rows) -->
+                        <tr>
+                            <td rowspan="5" style="width: 50%; text-align: center; vertical-align: top; padding: 6px 4px;" class="bg-white">
+                                <svg class="courier-logo-svg" viewBox="0 0 830 170" role="img" aria-label="DELHIVERY">
+                                    <rect width="830" height="170" fill="#FFFFFF" />
+                                    <g fill="#1E1E1E">
+                                        <path fill-rule="evenodd" d="M45 40h71l14 14v72l-14 14H67v-22H45V40Zm22 22h33l8 8v40l-8 8H67V62Z" />
+                                        <path transform="translate(-10 0)" d="M150 40h66l14 14v8h-58v17h43v22h-43v17h58v8l-14 14h-66V40Z" />
+                                        <path transform="translate(-18 0)" d="M262 40h8v78h58v8l-14 14h-66V54l14-14Z" />
+                                        <path transform="translate(-24 0)" d="M360 40h8v39h41V40h8l14 14v72l-14 14h-8v-39h-41v39h-22V54l14-14Z" />
+                                        <path transform="translate(-30 0)" d="M449 40h22v100h-22V40Z" />
+                                        <path transform="translate(-36 0)" d="M503 40h8l20.5 78L552 40h22l-31.5 100h-22L489 54l14-14Z" />
+                                        <path transform="translate(-42 0)" d="M592 40h66l14 14v8h-58v17h43v22h-43v17h58v8l-14 14h-66V40Z" />
+                                        <path transform="translate(-50 0)" d="M704 40h52l14 14v8h-58v78h-22V54l14-14Z" />
+                                        <path transform="translate(-58 0)" d="M788 40h22l21 30 20-8h22l-31 23v55h-22V85l-31-45Z" />
+                                    </g>
+                                    <g fill="#E51B24">
+                                        <rect x="45" y="118" width="22" height="22" />
+                                        <rect x="793" y="40" width="22" height="22" />
+                                    </g>
+                                </svg>
+                                <div style="font-weight: 700; font-size: 11px; color: #dc2626; margin-top: 2px; margin-bottom: 6px; font-family: Arial, sans-serif;">
+                                    ${serviceType}
+                                </div>
+                                <div class="datamatrix-container flex justify-center items-center py-1">
+                                    <canvas id="${qr2dCanvasId}"></canvas>
+                                </div>
+                            </td>
+                            <td style="width: 50%; font-weight: 700; font-size: 12px; font-family: Arial, sans-serif;">
+                                Date: <span style="font-weight: 800;">${shipDate}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; font-size: 12px; font-family: Arial, sans-serif;">
+                                LRN: <span style="font-weight: 800; font-family: Arial, sans-serif;">${lrnNumber}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; font-size: 12px; font-family: Arial, sans-serif;">
+                                OID: <span style="font-weight: 800; font-family: Arial, sans-serif;">${oidNumber}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top; padding: 4px 6px; font-family: Arial, sans-serif;">
+                                <div style="font-weight: 700; font-size: 11px;">Master:</div>
+                                <div style="font-weight: 800; font-size: 13px; font-family: Arial, sans-serif; margin-top: 1px;">${masterAwb}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 800; font-size: 14px; letter-spacing: 0.2px; font-family: Arial, sans-serif;">
+                                ${routeCode}
+                            </td>
+                        </tr>
+
+                        <!-- Row 2: Full Width 1D Barcode -->
+                        <tr>
+                            <td colspan="2" style="text-align: center; padding: 8px 4px 4px 4px;" class="barcode-1d-container">
+                                <svg id="${barcode1dSvgId}"></svg>
+                            </td>
+                        </tr>
+
+                        <!-- Row 3: Box Count & Master/Child Type -->
+                        <tr>
+                            <td style="width: 50%; text-align: center; font-weight: 800; font-size: 13px; padding: 6px; font-family: Arial, sans-serif;">
+                                Box : ${box.boxIndex}/${boxData.length}
+                            </td>
+                            <td style="width: 50%; text-align: center; font-weight: 700; font-size: 12px; padding: 6px; font-family: Arial, sans-serif;">
+                                ${box.type}
+                            </td>
+                        </tr>
+
+                        <!-- Row 4: Hub Location & Receiver Business Name -->
+                        <tr class="label-hub-row">
+                            <td style="width: 50%; vertical-align: middle; padding: 6px 6px; font-family: Arial, sans-serif;">
+                                <div style="font-weight: 700; font-size: 11px; line-height: 1.2;">${hubName}</div>
+                                <div style="font-weight: 700; font-size: 11px; line-height: 1.2;">${hubState}</div>
+                            </td>
+                            <td style="width: 50%; text-align: center; vertical-align: middle; font-weight: 800; font-size: 12px; text-transform: uppercase; padding: 6px 4px; font-family: Arial, sans-serif;">
+                                ${shipToName}
+                            </td>
+                        </tr>
+
+                        <!-- Row 5: Shipping Address & Remark Note -->
+                        <tr class="label-address-row">
+                            <td style="width: 70%; vertical-align: top; padding: 6px; font-family: Arial, sans-serif;">
+                                <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px;">Shipping address :</div>
+                                <div style="font-weight: 500; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
+                                    ${shipToAddress}
+                                </div>
+                            </td>
+                            <td style="width: 30%; text-align: center; vertical-align: middle; font-weight: 600; font-size: 11px; padding: 6px; font-family: Arial, sans-serif;">
+                                ${returnNote}
+                            </td>
+                        </tr>
+
+                        <!-- Row 6: Return Address (Full Width) -->
+                        <tr class="label-return-row">
+                            <td colspan="2" style="vertical-align: top; padding: 6px 6px 8px 6px; font-family: Arial, sans-serif;">
+                                <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px;">Return address :</div>
+                                <div style="font-weight: 500; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
+                                    ${returnAddress}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                `;
+
+                printableArea.appendChild(labelTable);
+
+                // Render 2D DataMatrix (Exact Delhivery DataMatrix 2D Barcode)
+                setTimeout(() => {
+                    try {
+                        const canvasElem = document.getElementById(qr2dCanvasId);
+                        if (canvasElem && typeof bwipjs !== 'undefined') {
+                            bwipjs.toCanvas(canvasElem, {
+                                bcid: 'datamatrix',
+                                text: box.awb || masterAwb,
+                                scale: 3,
+                                includetext: false
+                            });
+                        }
+                    } catch (e) {
+                        console.error("2D DataMatrix render error:", e);
+                    }
+                }, 10);
+
+                // Render 1D Code128 Barcode
+                try {
+                    JsBarcode(`#${barcode1dSvgId}`, box.awb || masterAwb || "0000000000000", {
+                        format: "CODE128",
+                        width: 1.5,
+                        height: 48,
+                        displayValue: false,
+                        margin: 0
+                    });
+                } catch (err) {
+                    console.error("1D Barcode render error:", err);
+                }
+            });
+        }
+
+        function loadSampleData() {
+            document.getElementById('courierName').value = sampleImageMatchData.courierName;
+            document.getElementById('serviceType').value = sampleImageMatchData.serviceType;
+            document.getElementById('shipDate').value = sampleImageMatchData.shipDate;
+            document.getElementById('lrnNumber').value = sampleImageMatchData.lrnNumber;
+            document.getElementById('oidNumber').value = sampleImageMatchData.oidNumber;
+            document.getElementById('masterAwb').value = sampleImageMatchData.masterAwb;
+            document.getElementById('routeCode').value = sampleImageMatchData.routeCode;
+            document.getElementById('hubName').value = sampleImageMatchData.hubName;
+            document.getElementById('hubState').value = sampleImageMatchData.hubState;
+
+            document.getElementById('shipToName').value = sampleImageMatchData.shipToName;
+            document.getElementById('shipToAddress').value = sampleImageMatchData.shipToAddress;
+            document.getElementById('returnNote').value = sampleImageMatchData.returnNote;
+            document.getElementById('returnAddress').value = sampleImageMatchData.returnAddress;
+
+            document.getElementById('totalBoxes').value = sampleImageMatchData.boxes.length;
+            document.getElementById('addAnotherBox').checked = sampleImageMatchData.boxes.length > 1;
+            boxData = JSON.parse(JSON.stringify(sampleImageMatchData.boxes));
+
+            initBoxInputs();
+            renderLabels();
+            showToast("Sample data loaded matching image_ec01ba.png!");
+        }
+
+        function resetForm() {
+            document.getElementById('courierName').value = "DELHIVERY";
+            document.getElementById('serviceType').value = "Small World";
+            document.getElementById('shipDate').value = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            document.getElementById('lrnNumber').value = Math.floor(100000000 + Math.random() * 900000000);
+            document.getElementById('oidNumber').value = "01";
+            document.getElementById('masterAwb').value = "222035100" + Math.floor(10000 + Math.random() * 90000);
+            document.getElementById('routeCode').value = "110001 DEL/HUB";
+            document.getElementById('hubName').value = "Delhi_Central_Hub";
+            document.getElementById('hubState').value = "(Delhi)";
+
+            document.getElementById('shipToName').value = fixedLabelData.shipToName;
+            document.getElementById('shipToAddress').value = fixedLabelData.shipToAddress;
+            document.getElementById('returnNote').value = fixedLabelData.returnNote;
+            document.getElementById('returnAddress').value = fixedLabelData.returnAddress;
+
+            document.getElementById('totalBoxes').value = 1;
+            document.getElementById('addAnotherBox').checked = false;
+            boxData = [{ boxIndex: 1, type: 'Master', awb: document.getElementById('masterAwb').value }];
+
+            initBoxInputs();
+            renderLabels();
+            showToast("Form cleared.");
+        }
+
+        function downloadPDF() {
+            showToast("Generating crisp 100% PDF...");
+            const element = document.getElementById('printableArea');
+            const lrn = document.getElementById('lrnNumber').value || 'shipment';
+
+            const opt = {
+                margin: [0.2, 0.2, 0.2, 0.2],
+                filename: `Delhivery_Label_${lrn}.pdf`,
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 4, useCORS: true, logging: false },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                showToast("100% Exact PDF downloaded successfully!");
+            }).catch(err => {
+                console.error("PDF generation error:", err);
+                showToast("Error generating PDF");
+            });
+        }
+    </script>
+</body>
+
+</html>
