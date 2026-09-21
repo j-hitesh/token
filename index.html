@@ -17,10 +17,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Liberation+Sans:wght@400;700&family=Inter:wght@400;500;600;700;800;900&display=swap');
+        :root {
+            --app-font: 'DejaVu Sans', 'Liberation Sans', Arial, Helvetica, sans-serif;
+            --label-font: 'DejaVu Sans', 'Liberation Sans', Arial, Helvetica, sans-serif;
+            --label-border-width: 1px;
+            --label-border-color: #000000;
+        }
 
         body {
-            font-family: Arial, Helvetica, 'Liberation Sans', sans-serif;
+            font-family: var(--app-font);
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
@@ -59,10 +64,11 @@
             width: 460px;
             /* Match the reference label proportions */
             background-color: #ffffff;
-            border: 2px solid #000000;
+            border: var(--label-border-width) solid var(--label-border-color);
             border-collapse: collapse;
+            border-spacing: 0;
             color: #000000;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: var(--label-font);
             font-size: 11px;
             line-height: 1.2;
             margin: 0 auto;
@@ -85,7 +91,7 @@
 
         .delhivery-table-label td,
         .delhivery-table-label th {
-            border: 2px solid #000000;
+            border: var(--label-border-width) solid var(--label-border-color);
             padding: 3px 5px;
             vertical-align: middle;
         }
@@ -122,7 +128,7 @@
         .courier-logo {
             position: relative;
             display: inline-block;
-            font-family: 'Arial Black', Impact, Arial, sans-serif;
+            font-family: 'DejaVu Sans', 'Arial Black', Impact, Arial, sans-serif;
             font-size: 20px;
             font-stretch: condensed;
             font-weight: 900;
@@ -235,7 +241,6 @@
                     </button>
                 </div>
 
-                <!-- Section 1: Top Header Metadata -->
                 <div class="space-y-3">
                     <h3
                         class="text-xs font-black uppercase tracking-wider text-slate-500 border-l-2 border-red-600 pl-2">
@@ -328,7 +333,7 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Remark / Note (Right Cell)</label>
                         <input type="text" id="returnNote" value="defecti item" readonly
-                            class="w-full text-xs p-2 border border-slate-300 rounded-lg font-medium">
+                            class="w-full text-xs p-2 border border-slate-300 rounded-lg font-light">
                     </div>
                 </div>
 
@@ -560,34 +565,16 @@
                 const barcode1dSvgId = `barcode-1d-svg-${idx}`;
                 const qr2dCanvasId = `qr-2d-canvas-${idx}`;
 
-                // 100% Exact Grid Table Structure matching image_ec01ba.png
                 labelTable.innerHTML = `
                     <tbody>
                         <!-- Row 1: Top Section (Left: Logo + Data Matrix | Right: 5 Stacked Sub-rows) -->
                         <tr>
-                            <td rowspan="5" style="width: 50%; text-align: center; vertical-align: top; padding: 6px 4px;" class="bg-white">
-                                <svg class="courier-logo-svg" viewBox="0 0 830 170" role="img" aria-label="DELHIVERY">
-                                    <rect width="830" height="170" fill="#FFFFFF" />
-                                    <g fill="#1E1E1E">
-                                        <path fill-rule="evenodd" d="M45 40h71l14 14v72l-14 14H67v-22H45V40Zm22 22h33l8 8v40l-8 8H67V62Z" />
-                                        <path transform="translate(-10 0)" d="M150 40h66l14 14v8h-58v17h43v22h-43v17h58v8l-14 14h-66V40Z" />
-                                        <path transform="translate(-18 0)" d="M262 40h8v78h58v8l-14 14h-66V54l14-14Z" />
-                                        <path transform="translate(-24 0)" d="M360 40h8v39h41V40h8l14 14v72l-14 14h-8v-39h-41v39h-22V54l14-14Z" />
-                                        <path transform="translate(-30 0)" d="M449 40h22v100h-22V40Z" />
-                                        <path transform="translate(-36 0)" d="M503 40h8l20.5 78L552 40h22l-31.5 100h-22L489 54l14-14Z" />
-                                        <path transform="translate(-42 0)" d="M592 40h66l14 14v8h-58v17h43v22h-43v17h58v8l-14 14h-66V40Z" />
-                                        <path transform="translate(-50 0)" d="M704 40h52l14 14v8h-58v78h-22V54l14-14Z" />
-                                        <path transform="translate(-58 0)" d="M788 40h22l21 30 20-8h22l-31 23v55h-22V85l-31-45Z" />
-                                    </g>
-                                    <g fill="#E51B24">
-                                        <rect x="45" y="118" width="22" height="22" />
-                                        <rect x="793" y="40" width="22" height="22" />
-                                    </g>
-                                </svg>
-                                <div style="font-weight: 700; font-size: 11px; color: #dc2626; margin-top: 2px; margin-bottom: 6px; font-family: Arial, sans-serif;">
+                            <td rowspan="5" style="width: 50%; text-align: center; vertical-align: top; padding: 6px 0; border: 1px solid #000000; border-bottom: 1px solid #000000;" class="bg-white">
+                              <img src="idYw5wJQH6_1789989389273.svg" alt="DELHIVERY Logo" style="width: 60%; height: auto; padding-left: 6px; ">
+                                <div style="font-weight: 700; text-align: left; font-size: 11px; color: #dc2626; margin-top: 2px; margin-bottom: 6px; font-family: Arial, sans-serif; padding-left: 6px;">
                                     ${serviceType}
                                 </div>
-                                <div class="datamatrix-container flex justify-center items-center py-1">
+                                <div class="datamatrix-container flex justify-center items-center py-1 border-t border-black">
                                     <canvas id="${qr2dCanvasId}"></canvas>
                                 </div>
                             </td>
@@ -637,8 +624,8 @@
                         <!-- Row 4: Hub Location & Receiver Business Name -->
                         <tr class="label-hub-row">
                             <td style="width: 50%; vertical-align: middle; padding: 6px 6px; font-family: Arial, sans-serif;">
-                                <div style="font-weight: 700; font-size: 11px; line-height: 1.2;">${hubName}</div>
-                                <div style="font-weight: 700; font-size: 11px; line-height: 1.2;">${hubState}</div>
+                                <div style="font-weight: 300; font-size: 11px; line-height: 1.2;">${hubName}</div>
+                                <div style="font-weight: 300; font-size: 11px; line-height: 1.2;">${hubState}</div>
                             </td>
                             <td style="width: 50%; text-align: center; vertical-align: middle; font-weight: 800; font-size: 12px; text-transform: uppercase; padding: 6px 4px; font-family: Arial, sans-serif;">
                                 ${shipToName}
@@ -649,11 +636,11 @@
                         <tr class="label-address-row">
                             <td style="width: 70%; vertical-align: top; padding: 6px; font-family: Arial, sans-serif;">
                                 <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px;">Shipping address :</div>
-                                <div style="font-weight: 500; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
+                                <div style="font-weight: 300; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
                                     ${shipToAddress}
                                 </div>
                             </td>
-                            <td style="width: 30%; text-align: center; vertical-align: middle; font-weight: 600; font-size: 11px; padding: 6px; font-family: Arial, sans-serif;">
+                            <td style="width: 30%; text-align: center; vertical-align: middle; font-weight: 300; font-size: 11px; padding: 6px; font-family: Arial, sans-serif;">
                                 ${returnNote}
                             </td>
                         </tr>
@@ -662,7 +649,7 @@
                         <tr class="label-return-row">
                             <td colspan="2" style="vertical-align: top; padding: 6px 6px 8px 6px; font-family: Arial, sans-serif;">
                                 <div style="font-weight: 800; font-size: 11px; margin-bottom: 3px;">Return address :</div>
-                                <div style="font-weight: 500; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
+                                <div style="font-weight: 300; font-size: 10.5px; line-height: 1.25; word-break: break-word;">
                                     ${returnAddress}
                                 </div>
                             </td>
